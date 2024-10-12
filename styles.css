@@ -113,3 +113,23 @@ h1:hover::before {
     border-color: rgba(0, 0, 0, 0.15);
     box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
 }
+
+@media screen and (max-width: 560px) {
+    .quote-container {
+        padding: 40px;
+    }
+
+    .options-container {
+        padding: 8px;
+        width: 90%;
+        border-radius: 16px;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .button {
+        flex-grow: 1;
+        justify-content: center;
+        width: 33%;
+    }
+  }
