@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const quoteElement = document.getElementById('quote');
   const authorElement = document.getElementById('author');
   const buttons = document.querySelectorAll('.button');
@@ -14,16 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
         'X-Api-Key': apiKey
       }
     })
-    .then(response => response.json())
-    .then(data => {
-      const quoteText = data[0].quote;
-      const quoteAuthor = data[0].author;
+      .then(response => response.json())
+      .then(data => {
+        const quoteText = data[0].quote;
+        const quoteAuthor = data[0].author;
 
-      // Display the quote and author
-      quoteElement.textContent = quoteText;
-      authorElement.textContent = `– ${quoteAuthor}`;
-    })
-    .catch(error => console.error('Error fetching quote:', error));
+        // Display the quote and author
+        quoteElement.textContent = quoteText;
+        authorElement.textContent = `– ${quoteAuthor}`;
+      })
+      .catch(error => console.error('Error fetching quote:', error));
   }
 
   // Default quote load (Inspire me)
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Tooltip and copy to clipboard functionality on the h1 element
+  // Tooltip and copy-to-clipboard functionality on the h1 element
   quoteElement.addEventListener('mouseenter', () => {
     quoteElement.setAttribute('data-tooltip', 'Copy');
   });
@@ -50,5 +50,26 @@ document.addEventListener('DOMContentLoaded', function() {
         quoteElement.setAttribute('data-tooltip', 'Copy');
       }, 2000);
     });
+  });
+
+  // Keyboard shortcut functionality
+  document.addEventListener('keydown', event => {
+    const keyMap = {
+      1: 'inspirational', // '1' triggers "Inspire"
+      2: 'success',       // '2' triggers "Motivate"
+      3: 'funny',         // '3' triggers "Laugh"
+      4: 'happiness'      // '4' triggers "Smile"
+    };
+
+    const category = keyMap[event.key.toLowerCase()];
+    if (category) {
+      fetchQuote(category);
+      // Optional: add a visual effect (like focus) to the corresponding button
+      const button = document.querySelector(`.button[data-category="${category}"]`);
+      if (button) {
+        button.classList.add('active');
+        setTimeout(() => button.classList.remove('active'), 200); // Temporary highlight effect
+      }
+    }
   });
 });
