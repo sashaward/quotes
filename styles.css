@@ -35,7 +35,7 @@ p {
 
 .material-symbols-rounded {
     font-size: 22px;
-    margin-right: 4px;
+    margin-right: 6px;
 }
 
 h1::before {
@@ -112,6 +112,21 @@ h1:hover::before {
     background-color: #F0F0F1;
     border-color: rgba(0, 0, 0, 0.15);
     box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+}
+
+.button.active {
+    transform: translateY(-1px);   
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.key {
+    margin-left: 10px;
+    padding: 2px 0px;
+    width: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
 }
 
 @media screen and (max-width: 560px) {
