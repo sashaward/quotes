@@ -4,26 +4,47 @@ document.addEventListener('DOMContentLoaded', function () {
   const buttons = document.querySelectorAll('.button');
   const apiKey = 'fZhEaGwYKY/O8UA6CnsFfw==RV2IVL0tAMCoXQtk'; // Replace with your actual API key
 
-  // Function to fetch and display quotes based on category
+  // v2 category names (see https://api-ninjas.com/api/quotes); UI still uses data-category="funny"
+  const categoryForApi = {
+    funny: 'humor'
+  };
+
   function fetchQuote(category) {
-    quoteElement.textContent = 'Loading...'; // Show loading text
+    quoteElement.textContent = 'Loading...';
     authorElement.textContent = '';
 
-    fetch(`https://api.api-ninjas.com/v1/quotes?category=${category}`, {
+    const apiCategory = categoryForApi[category] || category;
+    const url = `https://api.api-ninjas.com/v2/randomquotes?categories=${encodeURIComponent(apiCategory)}`;
+
+    fetch(url, {
       headers: {
         'X-Api-Key': apiKey
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        const quoteText = data[0].quote;
-        const quoteAuthor = data[0].author;
-
-        // Display the quote and author
-        quoteElement.textContent = quoteText;
-        authorElement.textContent = `– ${quoteAuthor}`;
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const message =
+            data && typeof data.error === 'string' ? data.error : `Request failed (${response.status})`;
+          throw new Error(message);
+        }
+        if (!Array.isArray(data) || !data[0] || typeof data[0].quote !== 'string') {
+          throw new Error('No quote in response');
+        }
+        return data[0];
       })
-      .catch(error => console.error('Error fetching quote:', error));
+      .then(item => {
+        quoteElement.textContent = item.quote;
+        authorElement.textContent = item.author ? `– ${item.author}` : '';
+      })
+      .catch(error => {
+        console.error('Error fetching quote:', error);
+        quoteElement.textContent = "Couldn't load a quote.";
+        authorElement.textContent =
+          error.message === 'Invalid API Key.'
+            ? 'Add a valid API Ninjas key in script.js (free at api-ninjas.com).'
+            : 'Try again in a moment.';
+      });
   }
 
   // Default quote load (Inspire me)
